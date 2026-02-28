@@ -21,21 +21,21 @@ jobs:
         pip3 install --user Cython==0.29.36
         pip3 install --user buildozer
     
-    - name: Install Android SDK
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+      with:
+        cmdline-tools-version: 9477386
+    
+    - name: Accept licenses and install packages
       run: |
-        mkdir -p ~/.buildozer/android/platform/android-sdk/cmdline-tools
-        cd ~/.buildozer/android/platform/android-sdk/cmdline-tools
-        wget -q https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
-        unzip -q commandlinetools-linux-9477386_latest.zip
-        mv cmdline-tools latest
-        export PATH=$PATH:~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin
         yes | sdkmanager --licenses || true
-        sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.0"
+        sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.0" "ndk;25.1.8937393"
     
     - name: Build APK
       run: |
-        export PATH=$PATH:~/.local/bin:~/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin
-        export ANDROID_SDK_ROOT=~/.buildozer/android/platform/android-sdk
+        export PATH=$PATH:~/.local/bin
+        export ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT
+        export ANDROID_NDK_HOME=$ANDROID_SDK_ROOT/ndk/25.1.8937393
         buildozer android debug
       env:
         BUILDOZER_WARN_ON_ROOT: 0
