@@ -17,3 +17,4 @@ android.build_tools = 33.0.2
 [buildozer]
 log_level = 2
 warn_on_root = 0
+android.accept_sdk_license = True
